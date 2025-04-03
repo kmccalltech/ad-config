@@ -79,3 +79,78 @@ When Client-1 has restarted, remote desktop into Client-1 using its public IP ad
 <p>Within Client-1 open up PowerShell and ping DC-1 to ensure that both VMs are on the same virtual network and that DC-1's firewall is disabled.
 
 Next, type "ipconfig /all and look to make sure the DNS server of Client-1 is set to DC-1's private IP address.</p>
+<table>
+  <tr>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 11 14 11 AM" src="https://i.imgur.com/Z5JmO3s.png" />
+    </td>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 11 14 26 AM" src="https://i.imgur.com/rWaaiyn.png" />
+    </td>
+  </tr>
+</table>
+<p>Log in to DC-1 and in server manager click "Add role and features". From here add a feature to install Active Directory Domain Services. Click through next to install AD DS.
+
+Once AD DS is installed, go to the top right flag in the server manager and promote the server to become a domain controller. Add a new forest named mydomain.com and continue through the setup wizard. (Be sure to uncheck DNS delegation as you progress through the setup
+
+Once the setup is finished, the VM will reboot. You may have to login again and if so that user is now a domain contoller so you have to put "mydomain/username" for the username for it to identify it</p>
+<table>
+  <tr>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 11 14 11 AM" src="https://i.imgur.com/6HutEWL.png" />
+    </td>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 11 14 26 AM" src="https://i.imgur.com/4YDcel0.png" />
+    </td>
+  </tr>
+</table>
+<p>Open Active Directory Users & Computers from within the start menu. By right clicking on mydomain, create a new Organizational Unit (OU).
+
+Create one named _EMPLOYEES and create another named _ADMINS
+
+Once both OUs are created, within _ADMINS right click to create a new user. I named this user Ken Admin and configure his login credentials.
+
+Something like ken_admin and password Cyberlab123 keeping it simple for this project .</p>
+<br>
+<p>
+  <img height="80%"  width="80%" alt="Screenshot 2025-01-10 at 12 24 26 PM" src="https://i.imgur.com/YzYMEEs.png" />
+</p>
+<p>Once he is created, right click on him to access Properties -> Members of, and add him to "Domain Admins". Be sure to click "Check Names" and apply when finished.</p>
+<p>Log out of DC-1 and log back in as “mydomain.com\ken_admin”</p>
+ <p>We can use ken_admin as the admin account from now on
+</p>
+<table>
+  <tr>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 12 48 48 PM" src="https://i.imgur.com/1TeD9xb.png" />
+    </td>
+    <td>
+      <img width="1000" alt="Screenshot 2025-01-10 at 12 49 59 PM" src="https://i.imgur.com/Cy1I7lC.png" />
+    </td>
+  </tr>
+</table>
+<p>Login to Client-1 as the original local admin</p>
+<p>From the start menu -> System -> Rename this PC Advanced -> Change, and enter mydomain.com</p>
+<p>This will prompt a login screen where we can login as mydomain.com\ken_admin and join client-1 to the domain controller dc-1</p>
+<br>
+
+<p>We can verify the join was successful by going back into DC-1 and Active Directory Users and Computers (ADUS) and finding client-1 within the Computer tab.</p>
+<p>Create a new OU named _CLIENTS and drag client-1 into it.</p>
+<br>
+
+<p><img height="70%" width="70%" alt="Screenshot 2025-01-10 at 1 57 16 PM" src="https://i.imgur.com/mjJbkNP.png" />
+</p>
+<p>Log into client-1 as Ken_Admin -> System -> Remote Desktop -> Select users that can remotely access this PC -> Add -> Domain Users -> Check names -> OK</p>
+<p>This will allow any user under the Domain Users group in the domain controller to be able to log into client-1. We will create users in the User Creation lab. </p>
+<p><img height="70%" width="70%" alt="Screenshot 2025-01-10 at 2 04 29 PM" src="https://i.imgur.com/obDKAV6.png" />
+</p>
+
+Within DC-1 as Jane.Admin, open PowerShell ISE as ADMINISTRATOR and paste the following [script](https://github.com/joshmadakor1/AD_PS/blob/master/Generate-Names-Create-Users.ps1)
+
+<p>Be sure to edit the password you want the users to have at the top of the script text.</p>
+
+
+<p>Check within ADUC and under _EMPLOYEES to see all the created users. Select any user and log into client-1 to test access</p>
+<p>All the created users should have access because we gave domain users access to remote desktop in client-1</p>
+
+**You're all done! My next project will be going through group policy and managing accounts see you there!
