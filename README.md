@@ -147,7 +147,7 @@ Something like ken_admin and password Cyberlab123 keeping it simple for this pro
 <p><img height="70%" width="70%" alt="Screenshot 2025-01-10 at 2 04 29 PM" src="https://i.imgur.com/obDKAV6.png" />
 </p>
 
-Within DC-1 as Jane.Admin, open PowerShell ISE as ADMINISTRATOR and paste the following [script](https://github.com/joshmadakor1/AD_PS/blob/master/Generate-Names-Create-Users.ps1)
+Within DC-1 as Ken_Admin, open PowerShell ISE as ADMINISTRATOR and paste the following [script](https://github.com/joshmadakor1/AD_PS/blob/master/Generate-Names-Create-Users.ps1)
 
 <p>Be sure to edit the password you want the users to have at the top of the script text.</p>
 
